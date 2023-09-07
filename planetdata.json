@@ -1,0 +1,34 @@
+{
+  "Mercurius" : {
+    "Start Angle" : "0",
+    "Perihelion Distance" : "46001195.6",
+    "Perihelion Angle" : "1.351862225",
+    "Period" : "87.9691",
+    "Eccentricity" : "0.205630",
+    "Color" : "k"
+  },
+  "Venus" : {
+    "Start Angle" : "0",
+    "Perihelion Distance" : "107477094",
+    "Perihelion Angle" : "2.296224977",
+    "Period" : "224.701",
+    "Eccentricity" : "0.006772",
+    "Color" : "y"
+  },
+  "Earth" : {
+    "Start Angle" : "0",
+    "Perihelion Distance" : "146605913",
+    "Perihelion Angle" : "1.796589572",
+    "Period" : "356.256",
+    "Eccentricity" : "0.016710219",
+    "Color" : "b"
+  },
+  "Mars" : {
+    "Start Angle": "0",
+    "Perihelion Distance": "206744257.29",
+    "Perihelion Angle": "5.874900435",
+    "Period": "686.971",
+    "Eccentricity": "0.0934",
+    "Color" : "r"
+  }
+}
