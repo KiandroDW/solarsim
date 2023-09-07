@@ -81,7 +81,6 @@ with open('planetdata.json') as json_file:
 fig = plt.gcf()
 ax = fig.gca()
 
-xjes = [0]
 for planet in data:
     body = Planet(float(data[planet]["Start Angle"]),
                   float(data[planet]["Perihelion Distance"]),
@@ -91,9 +90,7 @@ for planet in data:
     plt.plot(body.ellipsex, body.ellipsey, color=data[planet]["Color"])
     bodySphere = plt.Circle((body.x, body.y), 10000000, color=data[planet]["Color"])
     ax.add_patch(bodySphere)
-    xjes.append(body.closestx)
 
-plt.plot(xjes, [0, 0, 0, 0, 0])
 sun = plt.Circle((0, 0), 10000000, color='y')
 ax.add_patch(sun)
 # Mercurius = Planet(0, 46001195.6, 1.351862225, 87.9691, 0.205630)
