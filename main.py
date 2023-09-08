@@ -1,6 +1,18 @@
 import math
+import time
+
 import matplotlib.pyplot as plt
 import json
+import datetime
+
+
+RefDay = datetime.datetime(1999, 1, 1, 0, 1)
+Today = datetime.datetime.today()
+
+
+def dayscalc(startday, endday):
+    delta = endday - startday
+    return delta.days + (delta.seconds / 86400)
 
 
 class Planet:
@@ -43,8 +55,12 @@ class Planet:
                      self.Minor * math.sin(t) * math.sin(self.periA) + self.cx)
             y.append(self.Major * math.cos(t) * math.sin(self.periA) +
                      self.Minor * math.sin(t) * math.cos(self.periA) + self.cy)
-            t += 0.001
+            t += 0.1
         self.ellipsex, self.ellipsey = tuple(x), tuple(y)
+        coords = []
+        for i in x:
+            pos = x.index(i)
+            coords.append((x[pos], y[pos]))
 
         closesty = min([math.fabs(i) for i in y])
         if closesty not in y:
@@ -68,11 +84,15 @@ class Planet:
             self.Anglediff = math.pi - self.periA + (math.asin(closestx * math.sin(2 * math.pi - self.periA) / r))
 
         # position
-        time = 0
+        deltat = dayscalc(RefDay, Today)
+        time = deltat / self.period * 2 * math.pi
+        GM = 6.67e-11 * 1.989e30
+        velocity = 0
         self.x = self.Major * math.cos(- self.periA + self.startA - self.Anglediff + time) * math.cos(self.periA) - \
                  self.Minor * math.sin(- self.periA + self.startA - self.Anglediff + time) * math.sin(self.periA) + self.cx
         self.y = self.Major * math.cos(- self.periA + self.startA - self.Anglediff + time) * math.sin(self.periA) + \
                  self.Minor * math.sin(- self.periA + self.startA - self.Anglediff + time) * math.cos(self.periA) + self.cy
+        velocity = math.sqrt(GM * (2 / (math.sqrt(self.x ** 2 + self.y ** 2) * 1000) - 1 / (self.Major * 1000)))
 
 
 with open('planetdata.json') as json_file:
@@ -81,6 +101,7 @@ with open('planetdata.json') as json_file:
 fig = plt.gcf()
 ax = fig.gca()
 
+planets = []
 for planet in data:
     body = Planet(float(data[planet]["Start Angle"]),
                   float(data[planet]["Perihelion Distance"]),
@@ -90,9 +111,17 @@ for planet in data:
     plt.plot(body.ellipsex, body.ellipsey, color=data[planet]["Color"])
     bodySphere = plt.Circle((body.x, body.y), 10000000, color=data[planet]["Color"])
     ax.add_patch(bodySphere)
-
+    planets.append(body)
 sun = plt.Circle((0, 0), 10000000, color='y')
 ax.add_patch(sun)
+ax.set_aspect(1)
+plt.show()
+
+
+
+
+
+
 # Mercurius = Planet(0, 46001195.6, 1.351862225, 87.9691, 0.205630)
 # Venus = Planet(0, 107477094, 2.296224977, 224.701, 0.006772)
 # Aarde = Planet(0, 146605913, 1.796589572, 356.256, 0.016710219)
@@ -118,5 +147,6 @@ ax.add_patch(sun)
 # earth = plt.Circle((Aarde.x, Aarde.y), 10000000, color='b')
 # ax.add_patch(sun)
 # ax.add_patch(earth)
-ax.set_aspect(1)
-plt.show()
+
+
+
