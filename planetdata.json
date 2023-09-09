@@ -1,34 +1,92 @@
 {
-  "Mercurius" : {
-    "Start Angle" : "0",
+  "Mercury" : {
+    "Name" : "Mercury",
+    "Start Angle" : "0.1698205362",
     "Perihelion Distance" : "46001195.6",
     "Perihelion Angle" : "1.351862225",
     "Period" : "87.9691",
     "Eccentricity" : "0.205630",
-    "Color" : "k"
+    "Radius" : "2439.7",
+    "Color" : "[162, 162, 162]"
   },
   "Venus" : {
-    "Start Angle" : "0",
+    "Name" : "Venus",
+    "Start Angle" : "1.5123277970",
     "Perihelion Distance" : "107477094",
     "Perihelion Angle" : "2.296224977",
     "Period" : "224.701",
     "Eccentricity" : "0.006772",
-    "Color" : "y"
+    "Radius" : "6051.8",
+    "Color" : "[196, 172, 126]"
   },
   "Earth" : {
-    "Start Angle" : "0",
+    "Name" : "Earth",
+    "Start Angle" : "3.141592654",
     "Perihelion Distance" : "146605913",
     "Perihelion Angle" : "1.796589572",
     "Period" : "356.256",
     "Eccentricity" : "0.016710219",
-    "Color" : "b"
+    "Radius" : "6371.0",
+    "Color" : "[85, 101, 131]"
   },
   "Mars" : {
-    "Start Angle": "0",
+    "Name" : "Mars",
+    "Start Angle": "2.211157629",
     "Perihelion Distance": "206744257.29",
     "Perihelion Angle": "5.874900435",
     "Period": "686.971",
     "Eccentricity": "0.0934",
-    "Color" : "r"
+    "Radius" : "3389.5",
+    "Color" : "[188, 142, 47]"
+  },
+  "Jupiter" : {
+    "Name" : "Jupiter",
+    "Start Angle" : "0",
+    "Perihelion Distance" : "740599219",
+    "Perihelion Angle" : "0.2501231351",
+    "Period" : "4332.59",
+    "Eccentricity" : "0.0489",
+    "Radius" : "0",
+    "Color" : "[184, 163, 110]"
+  },
+  "Saturn" : {
+    "Name" : "Saturn",
+    "Start Angle" : "0",
+    "Perihelion Distance" : "1352544268.6",
+    "Perihelion Angle" : "1.624151042",
+    "Period" : "10755.70",
+    "Eccentricity" : "0.0565",
+    "Radius" : "0",
+    "Color" : "[214, 191, 150]"
+  },
+  "Uranus" : {
+    "Name" : "Uranus",
+    "Start Angle" : "0",
+    "Perihelion Distance" : "2735561623.4",
+    "Perihelion Angle" : "3.019506872",
+    "Period" : "30688.5",
+    "Eccentricity" : "0.04717",
+    "Radius" : "0",
+    "Color" : "[164, 191, 191]"
+  },
+  "Neptune" : {
+    "Name" : "Neptune",
+    "Start Angle": "0",
+    "Perihelion Distance": "4459512525.6",
+    "Perihelion Angle": "0.8399222492",
+    "Period": "60195",
+    "Eccentricity": "0.008678",
+    "Radius" : "0",
+    "Color" : "[127, 155, 212]"
+  },
+  "Pluto" : {
+    "Name" : "Pluto",
+    "Start Angle": "0",
+    "Perihelion Distance": "4436773649.2",
+    "Perihelion Angle": "3.910846521",
+    "Period": "90560",
+    "Eccentricity": "0.2488",
+    "Radius" : "0",
+    "Color" : "[200, 163, 132]"
   }
 }
