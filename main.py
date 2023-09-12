@@ -23,7 +23,8 @@ Today = datetime.datetime(datetime.datetime.today().year,
                           datetime.datetime.today().day,
                           datetime.datetime.today().hour)
 modechanging = False
-
+starting = False
+totalmouse = 0
 # Create a popup screen and loading screen
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 pygame.init()
@@ -32,11 +33,6 @@ windowdim = Vector2(1000, 1000)
 screen = pygame.display.set_mode((int(windowdim.x), int(windowdim.y)), pygame.RESIZABLE)
 font = pygame.font.SysFont('Arial', 20)
 pygame.display.set_caption('Solarsystem simulator')
-ltext = font.render("Loading...", True, [255, 255, 255], [0, 0, 0])
-ltextRect = ltext.get_rect()
-ltextRect.center = (500, 500)
-screen.blit(ltext, ltextRect)
-pygame.display.flip()
 
 
 # Main class that calculates everything
@@ -61,18 +57,18 @@ class Planet:
     This calculates all elements of the orbit.
     """
 
-    def __init__(self, Name: str, StartAngle: float, PerihelionDistance: float,
-                 PerihelionAngle: float, period: float, eccentricity: float, radius: float, color: str):
+    def __init__(self, name: str, start_angle: float, perihelion_distance: float,
+                 perihelion_angle: float, period: float, eccentricity: float, radius: float, color: str):
         # Save all the settings of the planet
-        self.startA = StartAngle
-        self.periD = PerihelionDistance
-        self.periA = PerihelionAngle + math.pi
+        self.startA = start_angle
+        self.periD = perihelion_distance
+        self.periA = perihelion_angle + math.pi
         self.period = period
         self.ecc = eccentricity
-        self.name = Name
+        self.name = name
         self.radius = radius
         colorl = color.replace("[", "").replace("]", "").split(", ")
-        colorl = [int(i) for i in colorl]
+        colorl = [int(j) for j in colorl]
         self.color = colorl
         planets.append(self)
 
@@ -93,14 +89,14 @@ class Planet:
         self.Minor = math.sqrt(-(self.ecc ** 2 - 1) * self.Major ** 2)
 
         # periC is the coordinates of the perihelion
-        periC = [self.periD * math.cos(self.periA),
-                 self.periD * math.sin(self.periA)]
+        peri_coords = [self.periD * math.cos(self.periA),
+                       self.periD * math.sin(self.periA)]
 
         # Calculate the orbit
         x, y = [], []
         t = 0
-        self.cx = self.Major * math.cos(self.periA) - periC[0]
-        self.cy = self.Major * math.sin(self.periA) - periC[1]
+        self.cx = self.Major * math.cos(self.periA) - peri_coords[0]
+        self.cy = self.Major * math.sin(self.periA) - peri_coords[1]
         while t < 6.3:
             x.append(self.Major * math.cos(t) * math.cos(self.periA) -
                      self.Minor * math.sin(t) * math.sin(self.periA) - self.cx)
@@ -110,18 +106,18 @@ class Planet:
 
         # Save the coordinates for the drawing tool
         self.coords = []
-        for i in x:
-            pos = x.index(i)
+        for j in x:
+            pos = x.index(j)
             self.coords.append((x[pos] / self.scale + int(windowdim.x) / 2, y[pos] / self.scale + int(windowdim.y) / 2))
 
         # Calculate the x-coordinate of the planet when it's at y=0
-        closesty = min([math.fabs(i) for i in y])
+        closesty = min([math.fabs(j) for j in y])
         if closesty not in y:
             closesty = - closesty
         place = y.index(closesty)
         if x[place] < 0:
             y.remove(closesty)
-            closesty2 = min([math.fabs(i) for i in y])
+            closesty2 = min([math.fabs(j) for j in y])
             if closesty2 not in y:
                 closesty2 = - closesty2
             place = y.index(closesty2)
@@ -129,7 +125,7 @@ class Planet:
         self.closestx = closestx
 
         # Use this x-coordinate to find the angle from the center at which the planet is at that position
-        if math.pi / 2 < PerihelionAngle < 3 * math.pi / 2:
+        if math.pi / 2 < perihelion_angle < 3 * math.pi / 2:
             a = self.Major - self.periD
             r = math.sqrt(a ** 2 + closestx ** 2 - 2 * a * closestx * math.cos(math.pi - self.periA))
             self.Anglediff = self.periA - (math.asin(closestx * math.sin(math.pi - self.periA) / r))
@@ -145,19 +141,20 @@ class Planet:
             self.Minor * math.sin(- self.periA - self.startA + self.Anglediff) * math.cos(self.periA) - self.cy
 
         self.position = [self.x / self.scale + int(windowdim.x) / 2, self.y / self.scale + int(windowdim.y) / 2]
+        self.outerposition = [0, 0]
 
         # Calculate the error-factor on the position of the planet, this error happens because this program calculates
         # the angular velocity manually
         totalw = 0
-        for i in range(int(self.period * 24)):
+        for _ in range(int(self.period * 24)):
             x = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - totalw) * math.cos(self.periA) - \
                 self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - totalw) * math.sin(
                 self.periA) - self.cx
             y = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - totalw) * math.sin(self.periA) + \
                 self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - totalw) * math.cos(
                 self.periA) - self.cy
-            GM = 6.67e-11 * 1.989e30
-            velocity = math.sqrt(GM * (2 / (math.sqrt(x ** 2 + y ** 2) * 1000) - 1 / (self.Major * 1000)))
+            gm = 6.67e-11 * 1.989e30
+            velocity = math.sqrt(gm * (2 / (math.sqrt(x ** 2 + y ** 2) * 1000) - 1 / (self.Major * 1000)))
             avelocity = velocity / math.sqrt((x * 1000) ** 2 + (y * 1000) ** 2) * 3600
             totalw += avelocity
         self.errorf = (2 * math.pi) / totalw
@@ -165,16 +162,9 @@ class Planet:
 
     # Process updates the image with newly calculated coordinates for the planets
     def process(self):
-        if mode == "INNER":
-            self.scale = 600000
-            self.rscale = 200
-            self.solarradius = 40
-        elif mode == "OUTER":
-            self.scale = 10000000
-            self.rscale = 3000
-            self.solarradius = 30
-        else:
-            assert 1 == 0, "Wrong mode, choose 'INNER' or 'OUTER'"
+        self.scale = -313333.3333333333333 * totalmouse + 600000
+        self.rscale = -93.33333333333 * totalmouse + 200
+        self.solarradius = 12 / (1 + math.e ** (- (totalmouse + 15) / 6)) + 29
 
         # If you change the mode, the orbits  get recalculated
         global modechanging
@@ -188,30 +178,33 @@ class Planet:
                          self.Minor * math.sin(t) * math.cos(self.periA) - self.cy)
                 t += 0.01
             self.coords = []
-            for i in x:
-                pos = x.index(i)
+            for j in x:
+                pos = x.index(j)
                 self.coords.append((x[pos] / self.scale + int(windowdim.x) / 2,
                                     y[pos] / self.scale + int(windowdim.y) / 2))
 
-
         # Add the outer planets to the inner planet mode if the setting is enabled
-        if mode == 'INNER' and self.name in ["Jupiter", "Saturn", "Uranus", "Neptune"] and outervis:
+        if ((self.x / self.scale + int(windowdim.x) / 2) > 1000 or (self.x / self.scale + int(windowdim.x) / 2) < 0
+            or (self.y / self.scale + int(windowdim.y) / 2) > 1000 or (self.y / self.scale + int(windowdim.y) / 2) < 0)\
+                and outervis:
             if (0 <= ((self.startA + self.totalw) % (2 * math.pi)) <= math.pi / 4) or \
                     (7 * math.pi / 4 <= ((self.startA + self.totalw) % (2 * math.pi)) <= 2 * math.pi):
-                self.position = [975, - 475 * math.tan(self.startA + self.totalw) + 500]
+                self.outerposition = [975, - 475 * math.tan(self.startA + self.totalw) + 500]
             elif math.pi / 4 <= ((self.startA + self.totalw) % (2 * math.pi)) <= 3 * math.pi / 4:
-                self.position = [475 / math.tan(self.startA + self.totalw) + 500, 25]
+                self.outerposition = [475 / math.tan(self.startA + self.totalw) + 500, 25]
             elif 3 * math.pi / 4 <= ((self.startA + self.totalw) % (2 * math.pi)) <= 5 * math.pi / 4:
-                self.position = [25, 475 * math.tan(self.startA + self.totalw) + 500]
+                self.outerposition = [25, 475 * math.tan(self.startA + self.totalw) + 500]
             else:
-                self.position = [- 475 / math.tan(self.startA + self.totalw) + 500, 975]
-            pygame.draw.circle(screen, self.color, self.position, radius=self.radius / 3000)
-        else:
-            pygame.draw.polygon(screen, self.color, self.coords, width=5)
-            self.position = [self.x / self.scale + int(windowdim.x) / 2, self.y / self.scale + int(windowdim.y) / 2]
-            pygame.draw.circle(screen, self.color, self.position, radius=self.radius / self.rscale)
-        GM = 6.67e-11 * 1.989e30
-        velocity = math.sqrt(GM * (2 / (math.sqrt(self.x ** 2 + self.y ** 2) * 1000) - 1 / (self.Major * 1000)))
+                self.outerposition = [- 475 / math.tan(self.startA + self.totalw) + 500, 975]
+            if self.name == "Mars":
+                pygame.draw.circle(screen, self.color, self.outerposition, radius=self.radius / 2000)
+            else:
+                pygame.draw.circle(screen, self.color, self.outerposition, radius=self.radius / 3000)
+        self.position = [self.x / self.scale + int(windowdim.x) / 2, self.y / self.scale + int(windowdim.y) / 2]
+        pygame.draw.circle(screen, self.color, self.position, radius=self.radius / self.rscale)
+        pygame.draw.polygon(screen, self.color, self.coords, width=5)
+        gm = 6.67e-11 * 1.989e30
+        velocity = math.sqrt(gm * (2 / (math.sqrt(self.x ** 2 + self.y ** 2) * 1000) - 1 / (self.Major * 1000)))
         avelocity = velocity / math.sqrt((self.x * 1000) ** 2 + (self.y * 1000) ** 2) * spf * self.errorf
         self.totalw += avelocity
         self.x = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - self.totalw) \
@@ -229,25 +222,26 @@ objects = []
 
 # The class to make buttons visual and work
 class Button:
-    def __init__(self, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False):
+    def __init__(self, x, y, width, height, button_text='Button', onclick_function=None, one_press=False):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.onclickFunction = onclickFunction
-        self.onePress = onePress
-        self.buttonText = buttonText
+        self.onclickFunction = onclick_function
+        self.onePress = one_press
+        self.buttonText = button_text
 
         self.fillColors = {
             'normal': '#ffffff',
             'hover': '#666666',
             'pressed': '#333333',
+            'press': '#444444'
         }
 
         self.buttonSurface = pygame.Surface((self.width, self.height))
         self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        self.buttonSurf = font.render(buttonText, True, (20, 20, 20))
+        self.buttonSurf = font.render(button_text, True, (20, 20, 20))
 
         self.alreadyPressed = False
 
@@ -255,11 +249,19 @@ class Button:
 
     def process(self):
 
-        mousePos = pygame.mouse.get_pos()
+        mouse_pos = pygame.mouse.get_pos()
 
-        if self.buttonText != 'Show outer' or mode == "INNER":
-            self.buttonSurface.fill(self.fillColors['normal'])
-            if self.buttonRect.collidepoint(mousePos):
+        if self.buttonText != 'Start' or not starting:
+            if (mode == "INNER" and self.buttonText == 'Outer planets') or \
+                    (mode == "OUTER" and self.buttonText == 'Inner planets'):
+                self.buttonSurface.fill(self.fillColors['normal'])
+            elif (mode == "INNER" and self.buttonText == 'Inner planets') or \
+                    (mode == "OUTER" and self.buttonText == 'Outer planets') or \
+                    (outervis and self.buttonText == 'Show outer'):
+                self.buttonSurface.fill(self.fillColors['press'])
+            else:
+                self.buttonSurface.fill(self.fillColors['normal'])
+            if self.buttonRect.collidepoint(mouse_pos):
                 self.buttonSurface.fill(self.fillColors['hover'])
 
                 if pygame.mouse.get_pressed(num_buttons=3)[0]:
@@ -283,13 +285,16 @@ class Button:
 
 
 # Functions the buttons have to do
-def modechange(_):
+def modechange(m):
     global mode
     global modechanging
-    if mode == "INNER":
+    global totalmouse
+    if m == 1:
         mode = "OUTER"
+        totalmouse = -30
     else:
         mode = "INNER"
+        totalmouse = 0
     modechanging = True
 
 
@@ -301,13 +306,54 @@ def outervisual(_):
         outervis = True
 
 
+def start(_):
+    global starting
+    starting = True
+
+
 buttons = [
-    ['Switch view', lambda: modechange(1)],
-    ['Show outer', lambda: outervisual(1)]
+    ['Inner planets', lambda: modechange(0)],
+    ['Outer planets', lambda: modechange(1)],
+    ['Show outer', lambda: outervisual(0)],
+    ['Start', lambda: start(0)]
 ]
+
 
 buttonWidth = 120
 buttonHeight = 35
+
+for index, buttonName in enumerate(buttons):
+    Button(440, index * (buttonHeight + 10) + 415, buttonWidth,
+           buttonHeight, buttonName[0], buttonName[1])
+
+while not starting:
+    screen.fill((0, 0, 0))
+    # Close the window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    for i in objects:
+        i.process()
+
+    ltext = font.render("Choose presets, these can be changed inside the simulation", True, [255, 255, 255], [0, 0, 0])
+    ltextRect = ltext.get_rect()
+    ltextRect.center = (500, 375)
+    screen.blit(ltext, ltextRect)
+
+    pygame.display.flip()
+    fpsClock.tick(60)
+
+screen.fill((0, 0, 0))
+objects = []
+
+ltext = font.render("Loading...", True, [255, 255, 255], [0, 0, 0])
+ltextRect = ltext.get_rect()
+ltextRect.center = (500, 500)
+screen.blit(ltext, ltextRect)
+pygame.display.flip()
+
 
 for index, buttonName in enumerate(buttons):
     Button(index * (buttonWidth + 10) + 10, 10, buttonWidth,
@@ -333,23 +379,31 @@ for planet in data:
 
 
 # Display the names of the planets when you hover over them
-def planetnames(planet):
+def planetnames(pl):
     mouspos = pygame.mouse.get_pos()
-    if math.fabs(mouspos[0] - planet.position[0]) < 25 and math.fabs(mouspos[1] - planet.position[1]) < 25:
-        if mode == "OUTER" and planet.name not in ["Mercury", "Venus", "Earth", "Mars"]:
-            text = font.render(planet.name, True, [255, 255, 255], [0, 0, 0])
-        elif mode == "INNER":
-            text = font.render(planet.name, True, [255, 255, 255], [0, 0, 0])
-        else:
-            text = font.render("", True, [255, 255, 255], [0, 0, 0])
-        textRect = text.get_rect()
-        textRect.center = (100, 100)
-        screen.blit(text, textRect)
-    elif math.fabs(mouspos[0] - 500) < planet.solarradius and math.fabs(mouspos[1] - 500) < planet.solarradius:
+    if math.fabs(mouspos[0] - 500) < pl.solarradius and math.fabs(mouspos[1] - 500) < pl.solarradius:
         text = font.render("Sun", True, [255, 255, 255], [0, 0, 0])
-        textRect = text.get_rect()
-        textRect.center = (100, 100)
-        screen.blit(text, textRect)
+        text_rect = text.get_rect()
+        text_rect.center = (100, 100)
+        screen.blit(text, text_rect)
+    elif math.fabs(mouspos[0] - pl.position[0]) < pl.radius / pl.rscale and \
+            math.fabs(mouspos[1] - pl.position[1]) < pl.radius / pl.rscale:
+        text = font.render(pl.name, True, [255, 255, 255], [0, 0, 0])
+        text_rect = text.get_rect()
+        text_rect.center = (100, 100)
+        screen.blit(text, text_rect)
+    elif math.fabs(mouspos[0] - pl.outerposition[0]) < pl.radius / 3000 and \
+            math.fabs(mouspos[1] - pl.outerposition[1]) < pl.radius / 3000:
+        text = font.render(pl.name, True, [255, 255, 255], [0, 0, 0])
+        text_rect = text.get_rect()
+        text_rect.center = (100, 100)
+        screen.blit(text, text_rect)
+    elif pl.name == "Mars" and (math.fabs(mouspos[0] - pl.outerposition[0]) < pl.radius / 100 and
+                                math.fabs(mouspos[1] - pl.outerposition[1]) < pl.radius / 100):
+        text = font.render(pl.name, True, [255, 255, 255], [0, 0, 0])
+        text_rect = text.get_rect()
+        text_rect.center = (100, 100)
+        screen.blit(text, text_rect)
 
 
 # Draw the image repeatedly.
@@ -364,6 +418,19 @@ while True:
             for p in planets:
                 print(f'Start Angle {p.name} = {(p.startA + p.totalw) % (2 * math.pi)}')
             sys.exit()
+        elif event.type == pygame.MOUSEWHEEL:
+            totalmouse += event.y
+            if totalmouse > 1:
+                totalmouse = 1
+            elif totalmouse < -200:
+                totalmouse = -200
+            if totalmouse == 0:
+                mode = "INNER"
+            elif totalmouse == -30:
+                mode = "OUTER"
+            else:
+                mode = "Custom"
+            modechanging = True
 
     # Draw the sun and every planet
     for p in planets:
@@ -373,8 +440,8 @@ while True:
     modechanging = False
 
     # Draw the buttons
-    for object in objects:
-        object.process()
+    for i in objects:
+        i.process()
 
     # Makes the movement fast until the planets are at their current positions
     if RefDay < Today:
