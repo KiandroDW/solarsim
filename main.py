@@ -26,7 +26,6 @@ modechanging = False
 starting = False
 totalmouse = 0
 # Create a popup screen and loading screen
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
 pygame.init()
 fpsClock = pygame.time.Clock()
 windowdim = Vector2(1000, 1000)
