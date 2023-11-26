@@ -4,7 +4,6 @@ import datetime
 import pygame
 import sys
 from pygame.math import Vector2
-import ctypes
 
 # Choose if you want to see the "INNER" or "OUTER" planets
 mode = "INNER"
