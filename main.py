@@ -1,8 +1,9 @@
-import math
-import json
 import datetime
+import json
+import math
 import pygame
 import sys
+
 from pygame.math import Vector2
 
 # Choose if you want to see the "INNER" or "OUTER" planets
