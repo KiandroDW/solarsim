@@ -7,7 +7,7 @@
     "Period" : "87.9691",
     "Eccentricity" : "0.205630",
     "Radius" : "2439.7",
-    "Color" : "[162, 162, 162]"
+    "Color" : [162, 162, 162]
   },
   "Venus" : {
     "Name" : "Venus",
@@ -17,7 +17,7 @@
     "Period" : "224.701",
     "Eccentricity" : "0.006772",
     "Radius" : "6051.8",
-    "Color" : "[196, 172, 126]"
+    "Color" : [196, 172, 126]
   },
   "Earth" : {
     "Name" : "Earth",
@@ -27,7 +27,7 @@
     "Period" : "356.256",
     "Eccentricity" : "0.016710219",
     "Radius" : "6371.0",
-    "Color" : "[85, 101, 131]"
+    "Color" : [85, 101, 131]
   },
   "Mars" : {
     "Name" : "Mars",
@@ -37,7 +37,7 @@
     "Period": "686.971",
     "Eccentricity": "0.0934",
     "Radius" : "3389.5",
-    "Color" : "[188, 142, 47]"
+    "Color" : [188, 142, 47]
   },
   "Jupiter" : {
     "Name" : "Jupiter",
@@ -47,7 +47,7 @@
     "Period" : "4332.59",
     "Eccentricity" : "0.0489",
     "Radius" : "69911",
-    "Color" : "[184, 163, 110]"
+    "Color" : [184, 163, 110]
   },
   "Saturn" : {
     "Name" : "Saturn",
@@ -57,7 +57,7 @@
     "Period" : "10755.70",
     "Eccentricity" : "0.0565",
     "Radius" : "58232",
-    "Color" : "[214, 191, 150]"
+    "Color" : [214, 191, 150]
   },
   "Uranus" : {
     "Name" : "Uranus",
@@ -67,7 +67,7 @@
     "Period" : "30688.5",
     "Eccentricity" : "0.04717",
     "Radius" : "25362",
-    "Color" : "[164, 191, 191]"
+    "Color" : [164, 191, 191]
   },
   "Neptune" : {
     "Name" : "Neptune",
@@ -77,6 +77,6 @@
     "Period": "60195",
     "Eccentricity": "0.008678",
     "Radius" : "24622",
-    "Color" : "[127, 155, 212]"
+    "Color" : [127, 155, 212]
   }
 }
