@@ -1,20 +1,10 @@
 import math
 import pygame
 
-modechanging = False
-# Create a popup screen and loading screen
-pygame.init()
-fpsClock = pygame.time.Clock()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-font = pygame.font.SysFont('Arial', 20)
-windowdim = pygame.display.get_window_size()
-screen.fill((0, 0, 0))
-ltext = font.render("Loading...", True, [255, 255, 255], [0, 0, 0])
-ltextRect = ltext.get_rect()
-ltextRect.center = (500, 500)
-screen.blit(ltext, ltextRect)
-pygame.display.flip()
-spf = 3600
+import orbit
+import screen
+
+
 planets = []
 
 
@@ -48,106 +38,27 @@ class Planet:
         self.periA = perihelion_angle + math.pi
         self.period = period
         self.ecc = eccentricity
-        self.name = name
         self.radius = radius
         self.color = color
+        self.name = name
         planets.append(self)
 
-        # Define the different scales for the mode
-        self.scale = 600000
-        self.rscale = 200
-        self.solarradius = 40
-
-        # semi-major axis, semi-minor axis
-        self.Major = self.periD / (1 - self.ecc)
-        self.Minor = math.sqrt(-(self.ecc ** 2 - 1) * self.Major ** 2)
-
-        # periC is the coordinates of the perihelion
-        peri_coords = [self.periD * math.cos(self.periA),
-                       self.periD * math.sin(self.periA)]
-
-        # Calculate the orbit
-        x, y = [], []
-        t = 0
-        self.cx = self.Major * math.cos(self.periA) - peri_coords[0]
-        self.cy = self.Major * math.sin(self.periA) - peri_coords[1]
-        while t < 6.3:
-            x.append(self.Major * math.cos(t) * math.cos(self.periA) -
-                     self.Minor * math.sin(t) * math.sin(self.periA) - self.cx)
-            y.append(self.Major * math.cos(t) * math.sin(self.periA) +
-                     self.Minor * math.sin(t) * math.cos(self.periA) - self.cy)
-            t += 0.063
-
-        # Save the coordinates for the drawing tool
-        self.coords = []
-        for j in x:
-            pos = x.index(j)
-            self.coords.append((x[pos] / self.scale + int(windowdim[0]) / 2, y[pos] / self.scale + int(windowdim[1]) / 2))
-
-        # Calculate the x-coordinate of the planet when it's at y=0
-        closesty = min([math.fabs(j) for j in y])
-        if closesty not in y:
-            closesty = - closesty
-        place = y.index(closesty)
-        if x[place] < 0:
-            y.remove(closesty)
-            closesty2 = min([math.fabs(j) for j in y])
-            if closesty2 not in y:
-                closesty2 = - closesty2
-            place = y.index(closesty2)
-        closestx = x[place]
-        self.closestx = closestx
-
-        # Use this x-coordinate to find the angle from the center at which the planet is at that position
-        if math.pi / 2 < perihelion_angle < 3 * math.pi / 2:
-            a = self.Major - self.periD
-            r = math.sqrt(a ** 2 + closestx ** 2 - 2 * a * closestx * math.cos(math.pi - self.periA))
-            self.Anglediff = self.periA - (math.asin(closestx * math.sin(math.pi - self.periA) / r))
-        else:
-            a = self.Major - self.periD
-            r = math.sqrt(a ** 2 + closestx ** 2 - 2 * a * closestx * math.cos(2 * math.pi - self.periA))
-            self.Anglediff = math.pi - self.periA + (math.asin(closestx * math.sin(2 * math.pi - self.periA) / r))
-
-        # Calculate the position of the planet at the start
-        self.x = self.Major * math.cos(- self.periA - self.startA + self.Anglediff) * math.cos(self.periA) - \
-            self.Minor * math.sin(- self.periA - self.startA + self.Anglediff) * math.sin(self.periA) - self.cx
-        self.y = self.Major * math.cos(- self.periA - self.startA + self.Anglediff) * math.sin(self.periA) + \
-            self.Minor * math.sin(- self.periA - self.startA + self.Anglediff) * math.cos(self.periA) - self.cy
-
-        self.position = [self.x / self.scale + int(windowdim[0]) / 2, self.y / self.scale + int(windowdim[1]) / 2]
-        self.outerposition = [0, 0]
-
-        # Calculate the error-factor on the position of the planet, this error happens because this program calculates
-        # the angular velocity manually
-        totalw = 0
-        for _ in range(int(self.period * 24)):
-            x = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - totalw) * math.cos(self.periA) - \
-                self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - totalw) * math.sin(
-                self.periA) - self.cx
-            y = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - totalw) * math.sin(self.periA) + \
-                self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - totalw) * math.cos(
-                self.periA) - self.cy
-            gm = 6.67e-11 * 1.989e30
-            velocity = math.sqrt(gm * (2 / (math.sqrt(x ** 2 + y ** 2) * 1000) - 1 / (self.Major * 1000)))
-            avelocity = velocity / math.sqrt((x * 1000) ** 2 + (y * 1000) ** 2) * 3600
-            totalw += avelocity
-        self.errorf = (2 * math.pi) / totalw
-        self.totalw = 0
+        self.orbit = orbit.Orbit(self.startA, self.periD, self.periA, self.period, self.ecc)
 
     # Process updates the image with newly calculated coordinates for the planets
     def process(self):
-        self.position = [self.x / self.scale + int(windowdim[0]) / 2, self.y / self.scale + int(windowdim[1]) / 2]
-        pygame.draw.circle(screen, self.color, self.position, radius=self.radius / self.rscale)
-        pygame.draw.polygon(screen, self.color, self.coords, width=5)
+        self.orbit.position = [self.orbit.x / orbit.scale + int(screen.window_dim[0]) / 2, self.orbit.y / orbit.scale + int(screen.window_dim[1]) / 2]
+        pygame.draw.circle(screen.screen, self.color, self.orbit.position, radius=self.radius / orbit.rscale)
+        pygame.draw.polygon(screen.screen, self.color, self.orbit.orbit_list, width=5)
         gm = 6.67e-11 * 1.989e30
-        velocity = math.sqrt(gm * (2 / (math.sqrt(self.x ** 2 + self.y ** 2) * 1000) - 1 / (self.Major * 1000)))
-        avelocity = velocity / math.sqrt((self.x * 1000) ** 2 + (self.y * 1000) ** 2) * spf * self.errorf
-        self.totalw += avelocity
-        self.x = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - self.totalw) \
+        velocity = math.sqrt(gm * (2 / (math.sqrt(self.orbit.x ** 2 + self.orbit.y ** 2) * 1000) - 1 / (self.orbit.semi_major_axis * 1000)))
+        avelocity = velocity / math.sqrt((self.orbit.x * 1000) ** 2 + (self.orbit.y * 1000) ** 2) * screen.spf
+        self.orbit.totalw += avelocity
+        self.orbit.x = self.orbit.semi_major_axis * math.cos(- self.periA - self.startA + self.orbit.angle_diff - self.orbit.totalw) \
             * math.cos(self.periA) - \
-            self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - self.totalw) \
-            * math.sin(self.periA) - self.cx
-        self.y = self.Major * math.cos(- self.periA - self.startA + self.Anglediff - self.totalw) \
+            self.orbit.semi_major_axis * math.sin(- self.periA - self.startA + self.orbit.angle_diff - self.orbit.totalw) \
+            * math.sin(self.periA) - self.orbit.cx
+        self.orbit.y = self.orbit.semi_major_axis * math.cos(- self.periA - self.startA + self.orbit.angle_diff - self.orbit.totalw) \
             * math.sin(self.periA) + \
-            self.Minor * math.sin(- self.periA - self.startA + self.Anglediff - self.totalw) \
-            * math.cos(self.periA) - self.cy
+            self.orbit.semi_minor_axis * math.sin(- self.periA - self.startA + self.orbit.angle_diff - self.orbit.totalw) \
+            * math.cos(self.periA) - self.orbit.cy
