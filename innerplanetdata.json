@@ -7,7 +7,7 @@
     "Period" : "87.9691",
     "Eccentricity" : "0.205630",
     "Radius" : "2439.7",
-    "Color" : "[162, 162, 162]"
+    "Color" : [162, 162, 162]
   },
   "Venus" : {
     "Name" : "Venus",
@@ -17,7 +17,7 @@
     "Period" : "224.701",
     "Eccentricity" : "0.006772",
     "Radius" : "6051.8",
-    "Color" : "[196, 172, 126]"
+    "Color" : [196, 172, 126]
   },
   "Earth" : {
     "Name" : "Earth",
@@ -27,7 +27,7 @@
     "Period" : "356.256",
     "Eccentricity" : "0.016710219",
     "Radius" : "6371.0 ",
-    "Color" : "[85, 101, 131]"
+    "Color" : [85, 101, 131]
   },
   "Mars" : {
     "Name" : "Mars",
@@ -37,6 +37,6 @@
     "Period": "686.971",
     "Eccentricity": "0.0934",
     "Radius" : "3389.5",
-    "Color" : "[188, 142, 47]"
+    "Color" : [188, 142, 47]
   }
 }

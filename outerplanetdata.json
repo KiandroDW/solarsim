@@ -1,44 +1,4 @@
 {
-  "Mercury" : {
-    "Name" : "Mercury",
-    "Start Angle" : "0.1698205362",
-    "Perihelion Distance" : "46001195.6",
-    "Perihelion Angle" : "1.351862225",
-    "Period" : "87.9691",
-    "Eccentricity" : "0.205630",
-    "Radius" : "2439.7",
-    "Color" : [162, 162, 162]
-  },
-  "Venus" : {
-    "Name" : "Venus",
-    "Start Angle" : "1.5123277970",
-    "Perihelion Distance" : "107477094",
-    "Perihelion Angle" : "2.296224977",
-    "Period" : "224.701",
-    "Eccentricity" : "0.006772",
-    "Radius" : "6051.8",
-    "Color" : [196, 172, 126]
-  },
-  "Earth" : {
-    "Name" : "Earth",
-    "Start Angle" : "3.141592654",
-    "Perihelion Distance" : "146605913",
-    "Perihelion Angle" : "1.796589572",
-    "Period" : "356.256",
-    "Eccentricity" : "0.016710219",
-    "Radius" : "6371.0",
-    "Color" : [85, 101, 131]
-  },
-  "Mars" : {
-    "Name" : "Mars",
-    "Start Angle": "2.211157629",
-    "Perihelion Distance": "206744257.29",
-    "Perihelion Angle": "5.874900435",
-    "Period": "686.971",
-    "Eccentricity": "0.0934",
-    "Radius" : "3389.5",
-    "Color" : [188, 142, 47]
-  },
   "Jupiter" : {
     "Name" : "Jupiter",
     "Start Angle" : "6.0917226882358",
