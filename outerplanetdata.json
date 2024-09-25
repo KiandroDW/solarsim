@@ -1,42 +1,22 @@
 {
   "Jupiter" : {
     "Name" : "Jupiter",
-    "Start Angle" : "6.0917226882358",
-    "Perihelion Distance" : "740599219",
-    "Perihelion Angle" : "0.2501231351",
-    "Period" : "4332.59",
-    "Eccentricity" : "0.0489",
-    "Radius" : "69911",
+    "Index" : 5,
     "Color" : [184, 163, 110]
   },
   "Saturn" : {
     "Name" : "Saturn",
-    "Start Angle" : "5.5950019831182",
-    "Perihelion Distance" : "1352544268.6",
-    "Perihelion Angle" : "1.624151042",
-    "Period" : "10755.70",
-    "Eccentricity" : "0.0565",
-    "Radius" : "58232",
+    "Index" : 6,
     "Color" : [214, 191, 150]
   },
   "Uranus" : {
     "Name" : "Uranus",
-    "Start Angle" : "0.8300785922485",
-    "Perihelion Distance" : "2735561623.4",
-    "Perihelion Angle" : "3.019506872",
-    "Period" : "30688.5",
-    "Eccentricity" : "0.04717",
-    "Radius" : "25362",
+    "Index" : 7,
     "Color" : [164, 191, 191]
   },
   "Neptune" : {
     "Name" : "Neptune",
-    "Start Angle": "6.216164663903",
-    "Perihelion Distance": "4459512525.6",
-    "Perihelion Angle": "0.8399222492",
-    "Period": "60195",
-    "Eccentricity": "0.008678",
-    "Radius" : "24622",
+    "Index" : 8,
     "Color" : [127, 155, 212]
   }
 }

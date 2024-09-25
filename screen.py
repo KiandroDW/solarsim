@@ -1,18 +1,22 @@
 import pygame
 import sys
+import random
 
 # Create a popup screen
 pygame.init()
 fps_clock = pygame.time.Clock()
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h), pygame.NOFRAME)
 window_dim = pygame.display.get_window_size()
 screen.fill((0, 0, 0))
 pygame.display.flip()
 FPS = 10
 SPF = 0.1
 
+stars = []
+
 
 def start(planets):
+    generate_stars()
     # Draw the image repeatedly.
     while True:
         screen.fill((0, 0, 0))
@@ -22,10 +26,28 @@ def start(planets):
                 pygame.quit()
                 sys.exit()
 
+        for star in stars:
+            pygame.draw.circle(screen, [star[2], star[3], star[4]], [star[0], star[1]], 1)
+
         # Draw the sun and every planet
         for planet in planets:
             planet.process()
-        pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / 2, int(window_dim[1]) / 2),
-                           radius=20)
+        pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / 3, int(window_dim[1]) / 2),
+                           radius=int(window_dim[1]) / 50)
+        pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / (6/5), int(window_dim[1]) / 4),
+                           radius=int(window_dim[1]) / 100)
         pygame.display.flip()
         fps_clock.tick(FPS)
+
+
+def generate_stars():
+    for i in range(400):
+        x = random.randint(1, window_dim[0])
+        y = random.randint(1, window_dim[1])
+        change = random.randint(-15, 15) * 5
+        r = 255 - abs(change) if change < 0 else 255
+        g = 255 - abs(change)
+        b = 255 - abs(change) if change > 0 else 255
+
+        brightness = random.randint(1, 10) * 0.1 * random.randint(1, 10) * 0.1
+        stars.append((x, y, r * brightness, g * brightness, b * brightness))

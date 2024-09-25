@@ -7,17 +7,23 @@ planets = []
 
 
 class Planet:
-    def __init__(self, date, hour, lat, r, radius, color):
-        self.date = date
-        self.hour = hour
-        self.lat = lat
-        self.r = float(r)
+    def __init__(self, lat, r, radius, color, dist_fact, x_fact, y_fact, r_fact):
+        lat = float(lat)
+        r = float(r)
+
         self.radius = float(radius)
         self.color = color
 
-        self.x = self.r * math.cos(math.radians(float(self.lat)))
-        self.y = - self.r * math.sin(math.radians(float(self.lat)))
+        self.x_fact = x_fact
+        self.y_fact = y_fact
+        self.r_fact = r_fact
+
+        self.x = r * math.cos(math.radians(lat)) * int(screen.window_dim[1]) / dist_fact
+        self.y = - r * math.sin(math.radians(lat)) * int(screen.window_dim[1]) / dist_fact
         planets.append(self)
 
     def process(self):
-        pygame.draw.circle(screen.screen, self.color, [self.x * 300 + int(screen.window_dim[0]) / 2, self.y * 300 + int(screen.window_dim[1]) / 2], self.radius / 200)
+        pygame.draw.circle(screen.screen, self.color,
+                           [self.x + int(screen.window_dim[0]) / self.x_fact,
+                            self.y + int(screen.window_dim[1]) / self.y_fact],
+                           self.radius / (screen.window_dim[1] / self.r_fact))
