@@ -34,7 +34,7 @@ while not passed:
                 body.Body(api_data[0], api_data[1], data_outer[p]["Color"], 124, 6 / 5, 4, 4000)
             for m in data_moon:
                 api_data = api.get_data(-1, "MOON", 1, s)
-                body.Body(api_data[0], api_data[1], data_moon[m]["Color"], 0.012, 6 / 5, 4 / 3, 125)
+                body.Body(api_data[0], api_data[1], data_moon[m]["Color"], 0.015, 6 / 5, 4 / 3, 125)
         passed = True
     except requests.exceptions.ConnectionError:
         if counter == 10:
