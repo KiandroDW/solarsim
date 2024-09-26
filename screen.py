@@ -2,20 +2,23 @@ import pygame
 import sys
 import random
 
-# Create a popup screen
+
 pygame.init()
-fps_clock = pygame.time.Clock()
-screen = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h), pygame.NOFRAME)
-window_dim = pygame.display.get_window_size()
-screen.fill((0, 0, 0))
-pygame.display.flip()
 FPS = 10
 SPF = 0.1
-
+screen = None
+window_dim = pygame.display.Info().current_w, pygame.display.Info().current_h
 stars = []
 
 
 def start(planets):
+    global screen
+    # Create a popup screen
+    fps_clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h), pygame.NOFRAME)
+    screen.fill((0, 0, 0))
+    pygame.display.flip()
+
     generate_stars()
     # Draw the image repeatedly.
     while True:
@@ -37,7 +40,7 @@ def start(planets):
         pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / (6 / 5), int(window_dim[1]) / 4),
                            radius=int(window_dim[1]) / 100)
         pygame.draw.circle(screen, [85, 101, 131], (int(window_dim[0]) / (6 / 5), int(window_dim[1]) / (4 / 3)),
-                           radius=int(window_dim[1]) / 100)
+                           radius=int(window_dim[1]) / 50)
         pygame.display.flip()
         fps_clock.tick(FPS)
 
