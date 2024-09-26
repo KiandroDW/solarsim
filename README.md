@@ -26,6 +26,7 @@ To get path_to_file, you can right-click the file in File Explorer -> Copy as Pa
 ## Data
 
 This makes use of the [Horizons API](https://ssd-api.jpl.nasa.gov/doc/horizons.html) to gather the data
+Unfortunately, this API only supports all bodies until 2200 A.D. so you can't use this while time traveling so far.
 
 ## Roadmap
 * Shadows on the planets/moon
