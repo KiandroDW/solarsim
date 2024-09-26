@@ -20,10 +20,10 @@ with open("outerplanetdata.json") as json_file:
 try:
     with requests.Session() as s:
         for p in data_inner:
-            api_data = api.get_data(data_inner[p]["Index"], s)
+            api_data = api.get_data(data_inner[p]["Index"], "PLANET", s)
             planet.Planet(api_data[2], api_data[3], api_data[4], data_inner[p]["Color"], 3.5, 3, 2, 4)
         for p in data_outer:
-            api_data = api.get_data(data_outer[p]["Index"], s)
+            api_data = api.get_data(data_outer[p]["Index"], "PLANET", s)
             planet.Planet(api_data[2], api_data[3], api_data[4], data_outer[p]["Color"], 124, 6/5, 4, 0.25)
 except requests.exceptions.ConnectionError:
     exit(0)

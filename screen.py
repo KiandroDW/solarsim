@@ -49,5 +49,5 @@ def generate_stars():
         g = 255 - abs(change)
         b = 255 - abs(change) if change > 0 else 255
 
-        brightness = random.randint(1, 10) * 0.1 * random.randint(1, 10) * 0.1
+        brightness = random.randint(1, 7) * random.randint(1, 10) * 0.01
         stars.append((x, y, r * brightness, g * brightness, b * brightness))
