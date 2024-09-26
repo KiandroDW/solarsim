@@ -38,7 +38,7 @@ while not passed:
         passed = True
     except requests.exceptions.ConnectionError:
         if counter == 10:
-            exit(0)
+            exit(1)
         counter += 1
         # Only try connecting once every 10 seconds
         sleep(10)

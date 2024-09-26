@@ -1,5 +1,4 @@
 import pygame
-import sys
 import random
 
 
@@ -29,7 +28,7 @@ def start(planets) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                exit(0)
 
         # Draw all the stars
         for star in stars:
