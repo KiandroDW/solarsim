@@ -9,13 +9,13 @@ import body
 import screen
 
 # Open the json files with all the data of the bodies
-with open("innerplanetdata.json") as json_file:
+with open(os.path.dirname(os.path.realpath(__file__)).replace("python_scripts", "json_files") + "\\innerplanetdata.json") as json_file:
     data_inner = json.load(json_file)
 
-with open("outerplanetdata.json") as json_file:
+with open(os.path.dirname(os.path.realpath(__file__)).replace("python_scripts", "json_files") + "\\outerplanetdata.json") as json_file:
     data_outer = json.load(json_file)
 
-with open("moondata.json") as json_file:
+with open(os.path.dirname(os.path.realpath(__file__)).replace("python_scripts", "json_files") + "\\moondata.json") as json_file:
     data_moon = json.load(json_file)
 
 # Load all the bodies
