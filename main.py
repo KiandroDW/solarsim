@@ -16,6 +16,9 @@ with open("innerplanetdata.json") as json_file:
 with open("outerplanetdata.json") as json_file:
     data_outer = json.load(json_file)
 
+with open("moondata.json") as json_file:
+    data_moon = json.load(json_file)
+
 # Load all the planets
 try:
     with requests.Session() as s:
@@ -25,6 +28,9 @@ try:
         for p in data_outer:
             api_data = api.get_data(data_outer[p]["Index"], "PLANET", s)
             planet.Planet(api_data[2], api_data[3], api_data[4], data_outer[p]["Color"], 124, 6/5, 4, 0.25)
+        for m in data_moon:
+            api_data = api.get_data(-1, "MOON", s)
+            planet.Planet(api_data[2], api_data[3], api_data[4], data_moon[m]["Color"], 0.01, 6/5, 4/3, 8)
 except requests.exceptions.ConnectionError:
     exit(0)
 

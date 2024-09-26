@@ -17,7 +17,7 @@ def get_data(index, type, session):
     moon_url = ("https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='"
                 "301"
                 "'&OBJ_DATA='NO'&MAKE_EPHEM='YES'&EPHEM_TYPE='OBSERVER'&CENTER='500@399'&"
-                f"START_TIME='{start_time}'&STOP_TIME='{stop_time}'&STEP_SIZE='1 d'&QUANTITIES='18,19'"
+                f"START_TIME='{start_time}'&STOP_TIME='{stop_time}'&STEP_SIZE='1 d'&QUANTITIES='31,20'"
                 )
 
     # Submit the API request:

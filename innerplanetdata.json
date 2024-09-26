@@ -1,22 +1,38 @@
 {
-  "Mercury" : {
-    "Name" : "Mercury",
-    "Index" : 1,
-    "Color" : [162, 162, 162]
+  "Mercury": {
+    "Name": "Mercury",
+    "Index": 1,
+    "Color": [
+      162,
+      162,
+      162
+    ]
   },
-  "Venus" : {
-    "Name" : "Venus",
-    "Index" : 2,
-    "Color" : [196, 172, 126]
+  "Venus": {
+    "Name": "Venus",
+    "Index": 2,
+    "Color": [
+      196,
+      172,
+      126
+    ]
   },
-  "Earth" : {
-    "Name" : "Earth",
-    "Index" : 3,
-    "Color" : [85, 101, 131]
+  "Earth": {
+    "Name": "Earth",
+    "Index": 3,
+    "Color": [
+      85,
+      101,
+      131
+    ]
   },
-  "Mars" : {
-    "Name" : "Mars",
-    "Index" : 4,
-    "Color" : [188, 142, 47]
+  "Mars": {
+    "Name": "Mars",
+    "Index": 4,
+    "Color": [
+      188,
+      142,
+      47
+    ]
   }
 }

@@ -34,7 +34,9 @@ def start(planets):
             planet.process()
         pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / 3, int(window_dim[1]) / 2),
                            radius=int(window_dim[1]) / 50)
-        pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / (6/5), int(window_dim[1]) / 4),
+        pygame.draw.circle(screen, [255, 242, 222], (int(window_dim[0]) / (6 / 5), int(window_dim[1]) / 4),
+                           radius=int(window_dim[1]) / 100)
+        pygame.draw.circle(screen, [85, 101, 131], (int(window_dim[0]) / (6 / 5), int(window_dim[1]) / (4 / 3)),
                            radius=int(window_dim[1]) / 100)
         pygame.display.flip()
         fps_clock.tick(FPS)
