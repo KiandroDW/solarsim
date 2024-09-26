@@ -1,0 +1,38 @@
+{
+  "Jupiter": {
+    "Name": "Jupiter",
+    "Index": 5,
+    "Color": [
+      184,
+      163,
+      110
+    ]
+  },
+  "Saturn": {
+    "Name": "Saturn",
+    "Index": 6,
+    "Color": [
+      214,
+      191,
+      150
+    ]
+  },
+  "Uranus": {
+    "Name": "Uranus",
+    "Index": 7,
+    "Color": [
+      164,
+      191,
+      191
+    ]
+  },
+  "Neptune": {
+    "Name": "Neptune",
+    "Index": 8,
+    "Color": [
+      127,
+      155,
+      212
+    ]
+  }
+}
