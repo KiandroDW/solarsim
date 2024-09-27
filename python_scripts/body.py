@@ -49,4 +49,3 @@ class Body:
                                [data[0] + int(screen.WINDOW_DIM[0]) / self.x_fact,
                                 data[1] + int(screen.WINDOW_DIM[1]) / self.y_fact],
                                radius)
-
