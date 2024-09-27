@@ -1,5 +1,10 @@
 import pygame
 import random
+from PIL import ImageGrab
+import os
+from pathlib import Path
+import datetime
+import ctypes
 
 
 # Initialize the screen and constants
@@ -20,16 +25,9 @@ def start(planets) -> None:
     pygame.display.flip()
 
     generate_stars()
-    # Draw the bodies repeatedly.
-    while True:
-        screen.fill((0, 0, 0))
+    screen.fill((0, 0, 0))
 
-        # Close the window
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit(0)
-
+    for i in range(2):
         # Draw all the stars
         for star in stars:
             pygame.draw.circle(screen, [star[2], star[3], star[4]], [star[0], star[1]], 1)
@@ -48,6 +46,42 @@ def start(planets) -> None:
                            radius=int(WINDOW_DIM[1]) / 25)
         pygame.display.flip()
         fps_clock.tick(FPS)
+
+    home = Path.home()
+    path = str(home) + "/SolarSimBackground"
+
+    try:
+        files = os.listdir(path)
+        for file in files:
+            file_path = os.path.join(path, file)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+    except OSError:
+        print("Error occurred while deleting files.")
+        pygame.quit()
+        exit(1)
+
+    filename = "/" + datetime.datetime.today().strftime("%Y-%m-%d-%H.%M") + ".png"
+    screenshot = ImageGrab.grab()
+    screenshot.save(path + filename)
+    screenshot.close()
+
+    # Constants for setting the wallpaper
+    SPI_SETDESKWALLPAPER = 20  # Action to change wallpaper
+    SPIF_UPDATEINIFILE = 0x01  # Update user profile
+    SPIF_SENDWININICHANGE = 0x02  # Notify change to system
+
+    try:
+        # Call Windows API to change wallpaper
+        ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, path + filename,
+                                                   SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE)
+        pygame.quit()
+        exit(0)
+    except Exception as e:
+        # Print error message if wallpaper change fails
+        print(f"Error changing wallpaper: {e}")
+        pygame.quit()
+        exit(1)
 
 
 def generate_stars() -> None:
