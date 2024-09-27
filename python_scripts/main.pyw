@@ -1,11 +1,12 @@
 import json
 import socket
-
 import api
 from time import sleep
 import os
-import http.client
+import threading
+import dugong
 import ssl
+import time
 # make pygame not print support prompt
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import body
@@ -28,18 +29,41 @@ passed = False
 counter = 0
 while not passed:
     try:
-        conn = http.client.HTTPSConnection("ssd.jpl.nasa.gov", context=ssl.create_default_context())
+        t0 = time.time()
+        paths = []
         for p in data_inner:
-            api_data = api.get_data(data_inner[p]["Index"], "PLANET", 6, conn)
-            body.Body(api_data[0], api_data[1], data_inner[p]["Color"], 3.5, 3, 2, 250)
+            paths.append(api.get_path(data_inner[p]["Index"], "PLANET", 6))
+
         for p in data_outer:
-            api_data = api.get_data(data_outer[p]["Index"], "PLANET", 672, conn)
-            body.Body(api_data[0], api_data[1], data_outer[p]["Color"], 124, 6 / 5, 4, 4000)
+            paths.append(api.get_path(data_outer[p]["Index"], "PLANET", 672))
+
         for m in data_moon:
-            api_data = api.get_data(-1, "MOON", 1, conn)
-            body.Body(api_data[0], api_data[1], data_moon[m]["Color"], 0.015, 6 / 5, 4 / 3, 125)
-        conn.close()
+            paths.append(api.get_path(-1, "MOON", 1))
+
+        with dugong.HTTPConnection("ssd.jpl.nasa.gov", port=dugong.HTTPS_PORT, ssl_context=ssl.create_default_context()) as connection:
+            def send_requests():
+                for body_path in paths:
+                    connection.send_request("GET", body_path)
+
+            thread = threading.Thread(target=send_requests)
+            thread.run()
+            responses = []
+            for path in paths:
+                resp = connection.read_response()
+                assert resp.status == 200
+                responses.append(connection.readall().decode("utf-8"))
+
+        for response in responses:
+            api_data = api.get_data(response)
+            body.Body(api_data[0], api_data[1], data_inner["Earth"]["Color"], 3.5, 3, 2, 250)
+        print(time.time() - t0)
+        exit(0)
+
+
         passed = True
+        # body.Body(api_data[0], api_data[1], data_inner[p]["Color"], 3.5, 3, 2, 250)
+        # body.Body(api_data[0], api_data[1], data_outer[p]["Color"], 124, 6 / 5, 4, 4000)
+        #  body.Body(api_data[0], api_data[1], data_moon[m]["Color"], 0.015, 6 / 5, 4 / 3, 125)
     except socket.gaierror:
         if counter == 10:
             exit(1)
