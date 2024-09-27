@@ -6,7 +6,6 @@ from pathlib import Path
 import datetime
 import ctypes
 
-
 # Initialize the screen and constants
 pygame.init()
 FPS = 10

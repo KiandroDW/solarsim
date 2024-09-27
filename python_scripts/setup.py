@@ -1,6 +1,7 @@
 import getpass
 import os
 from pathlib import Path
+
 USER_NAME = getpass.getuser()
 
 home = Path.home()
@@ -20,7 +21,6 @@ try:
 except OSError:
     print("Error occurred while deleting files.")
     exit(1)
-
 
 with open(bat_path + '\\' + "open.bat", "w+") as bat_file:
     bat_file.write(r'python3 "%s"' % file_path)
