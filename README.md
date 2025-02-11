@@ -16,8 +16,9 @@ Have a dynamic background which shows the real time location of the planets usin
     > pip install dugong
     ```
 
-3. Run the [setup script](python_scripts/setup.py). This will make sure your background will automatically change on startup.
-4. (optional) Run [main.pyw](python_scripts/main.pyw) to generate a first background.
+3. (optional) In the [setup script](python_scripts/setup.py), change verbose to `True` if you want a terminal to pop up everytime it loads the background.
+4. Run the [setup script](python_scripts/setup.py). This will make sure your background will automatically change on startup.
+5. (optional) Run [main.pyw](python_scripts/main.pyw) to generate a first background.
 
 ### Run scripts
 If you have python installed and all the packages, you can run a script by running:
