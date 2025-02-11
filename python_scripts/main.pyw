@@ -5,6 +5,11 @@ import os
 import threading
 import dugong
 import ssl
+import certifi
+
+from exceptions import HTTPSolarSimException
+
+ssl_context = ssl.create_default_context(cafile=certifi.where())
 
 # make pygame not print support prompt
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
@@ -28,7 +33,8 @@ with open(os.path.dirname(os.path.realpath(__file__)).replace("python_scripts",
 # The program can only work when you have internet connection, so when there's none the program will wait for max 100s
 # before closing.
 passed = False
-counter = 0
+counter = 1
+print(f"Connecting to NASA servers. Attempt {counter} / 10")
 while not passed:
     try:
         paths = []
@@ -46,8 +52,9 @@ while not passed:
             colors.append(data_moon[m]["Color"])
 
         with dugong.HTTPConnection("ssd.jpl.nasa.gov", port=dugong.HTTPS_PORT,
-                                   ssl_context=ssl.create_default_context()) as connection:
+                                   ssl_context=ssl_context) as connection:
             def send_requests():
+                print("Setting up connection")
                 for body_path in paths:
                     connection.send_request("GET", body_path)
 
@@ -61,6 +68,7 @@ while not passed:
                 responses.append(connection.readall().decode("utf-8"))
 
         for i, response in enumerate(responses):
+            print(f"Drawing body {i + 1} / {len(responses)}")
             api_data = api.get_data(response)
             if 0 <= i < 4:
                 body.Body(api_data[0], api_data[1], colors[i], 3.5, 3, 2, 250)
@@ -70,11 +78,13 @@ while not passed:
                 body.Body(api_data[0], api_data[1], colors[i], 0.015, 6 / 5, 4 / 3, 125)
         passed = True
     except Exception as e:
+        print("connection failed, retrying")
         if counter == 10:
-            exit(1)
+            raise HTTPSolarSimException()
         counter += 1
         # Only try connecting once every 10 seconds
-        sleep(10)
+        sleep(6)
+        print(f"Connecting to NASA servers. Attempt {counter} / 10")
         pass
 
 # Start the screen
